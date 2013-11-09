@@ -1,0 +1,29 @@
+﻿@model List<Model.Model.ViewGroup>
+
+@{
+    ViewBag.Title = "Groups";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<fieldset>
+        <legend>My Groups</legend>
+        <div>
+          @Html.ActionLink("Create New Group", "Create", "Group")
+        </div>
+        @foreach (var item in Model)
+        {
+            <div>
+                <span>@item.Name</span>
+                @Html.ActionLink("View", "View", controllerName: "Group", routeValues: new RouteValueDictionary { { "groupId", item.Id.ToString() } }, htmlAttributes: null)
+                @Html.ActionLink("Edit", "Edit", controllerName: "Group", routeValues: new RouteValueDictionary { { "groupId", item.Id.ToString() } }, htmlAttributes: null)
+                @Html.ActionLink("Delete", "Delete", controllerName: "Group", routeValues: new RouteValueDictionary { { "groupId", item.Id.ToString() } }, htmlAttributes: null)
+            </div>
+        }
+</fieldset>
+<div>
+    @Html.ActionLink("Back", "Index", "Home")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

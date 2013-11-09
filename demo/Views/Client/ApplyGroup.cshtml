@@ -1,0 +1,32 @@
+﻿@model List<Model.Model.ViewGroup>
+
+@{
+    ViewBag.Title = "ApplyEvent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+            <legend>Groups</legend>
+            @foreach (var item in Model)
+            {
+                <div>
+                    @Html.CheckBox(item.Id.ToString())  
+                    @Html.Label(string.Format("{0}({1})", item.Name, item.Description))
+                </div>
+            }
+
+            <p>
+                <input type="submit" value="Apply" />
+            </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back", "Events", "Client")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

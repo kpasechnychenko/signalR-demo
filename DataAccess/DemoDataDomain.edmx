@@ -1,0 +1,522 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Demo.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="DemoStoreContainer">
+    <EntitySet Name="Users" EntityType="Demo.Store.Users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Roles" EntityType="Demo.Store.Roles" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Groups" EntityType="Demo.Store.Groups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Events" EntityType="Demo.Store.Events" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TrackLogs" EntityType="Demo.Store.TrackLogs" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UsersInGroups" EntityType="Demo.Store.UsersInGroups" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="RoleUser" Association="Demo.Store.RoleUser">
+      <End Role="Role" EntitySet="Roles" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="GroupEvent" Association="Demo.Store.GroupEvent">
+      <End Role="Group" EntitySet="Groups" />
+      <End Role="Event" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="UserTrackLog" Association="Demo.Store.UserTrackLog">
+      <End Role="User" EntitySet="Users" />
+      <End Role="TrackLog" EntitySet="TrackLogs" />
+    </AssociationSet>
+    <AssociationSet Name="EventTrackLog" Association="Demo.Store.EventTrackLog">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="TrackLog" EntitySet="TrackLogs" />
+    </AssociationSet>
+    <AssociationSet Name="UserGroup" Association="Demo.Store.UserGroup">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Group" EntitySet="Groups" />
+    </AssociationSet>
+    <AssociationSet Name="UserUsersInGroups" Association="Demo.Store.UserUsersInGroups">
+      <End Role="User" EntitySet="Users" />
+      <End Role="UsersInGroups" EntitySet="UsersInGroups" />
+    </AssociationSet>
+    <AssociationSet Name="GroupUsersInGroups" Association="Demo.Store.GroupUsersInGroups">
+      <End Role="Group" EntitySet="Groups" />
+      <End Role="UsersInGroups" EntitySet="UsersInGroups" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="Role_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Roles">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Groups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Owner_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Events">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="BaseLat" Type="float" Nullable="false" DefaultValue="0" />
+    <Property Name="BaseLon" Type="float" Nullable="false" DefaultValue="0" />
+    <Property Name="BaseRadius" Type="float" Nullable="false" DefaultValue="0" />
+    <Property Name="Group_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TrackLogs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Lat" Type="float" Nullable="false" DefaultValue="0" />
+    <Property Name="Lon" Type="float" Nullable="false" DefaultValue="0" />
+    <Property Name="LogDateTime" Type="datetime" Nullable="false" />
+    <Property Name="User_Id" Type="int" Nullable="false" />
+    <Property Name="Event_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UsersInGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="User_Id" Type="int" Nullable="false" />
+    <Property Name="Group_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="RoleUser">
+    <End Role="Role" Type="Demo.Store.Roles" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="User" Type="Demo.Store.Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="Role_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GroupEvent">
+    <End Role="Group" Type="Demo.Store.Groups" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Event" Type="Demo.Store.Events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Group">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Event">
+        <PropertyRef Name="Group_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserTrackLog">
+    <End Role="User" Type="Demo.Store.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TrackLog" Type="Demo.Store.TrackLogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TrackLog">
+        <PropertyRef Name="User_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EventTrackLog">
+    <End Role="Event" Type="Demo.Store.Events" Multiplicity="1" />
+    <End Role="TrackLog" Type="Demo.Store.TrackLogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TrackLog">
+        <PropertyRef Name="Event_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserGroup">
+    <End Role="User" Type="Demo.Store.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Group" Type="Demo.Store.Groups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Group">
+        <PropertyRef Name="Owner_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserUsersInGroups">
+    <End Role="User" Type="Demo.Store.Users" Multiplicity="1" />
+    <End Role="UsersInGroups" Type="Demo.Store.UsersInGroups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UsersInGroups">
+        <PropertyRef Name="User_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GroupUsersInGroups">
+    <End Role="Group" Type="Demo.Store.Groups" Multiplicity="1" />
+    <End Role="UsersInGroups" Type="Demo.Store.UsersInGroups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Group">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UsersInGroups">
+        <PropertyRef Name="Group_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Demo" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="DemoContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="Demo.User" />
+          <EntitySet Name="Roles" EntityType="Demo.Role" />
+          <AssociationSet Name="RoleUser" Association="Demo.RoleUser">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <EntitySet Name="Groups" EntityType="Demo.Group" />
+          <EntitySet Name="Events" EntityType="Demo.Event" />
+          <AssociationSet Name="GroupEvent" Association="Demo.GroupEvent">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <EntitySet Name="TrackLogs" EntityType="Demo.TrackLog" />
+          <AssociationSet Name="UserTrackLog" Association="Demo.UserTrackLog">
+            <End Role="User" EntitySet="Users" />
+            <End Role="TrackLog" EntitySet="TrackLogs" />
+          </AssociationSet>
+          <AssociationSet Name="EventTrackLog" Association="Demo.EventTrackLog">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="TrackLog" EntitySet="TrackLogs" />
+          </AssociationSet>
+          <EntitySet Name="UsersInGroups" EntityType="Demo.UsersInGroups" />
+          <AssociationSet Name="UserGroup" Association="Demo.UserGroup">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Group" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="UserUsersInGroups" Association="Demo.UserUsersInGroups">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UsersInGroups" EntitySet="UsersInGroups" />
+          </AssociationSet>
+          <AssociationSet Name="GroupUsersInGroups" Association="Demo.GroupUsersInGroups">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="UsersInGroups" EntitySet="UsersInGroups" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="UserName" Nullable="false" />
+          <Property Type="String" Name="Password" Nullable="false" />
+          <Property Type="String" Name="Email" Nullable="false" />
+          <Property Type="String" Name="FirstName" Nullable="false" />
+          <Property Type="String" Name="LastName" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="Demo.RoleUser" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="TrackLogs" Relationship="Demo.UserTrackLog" FromRole="User" ToRole="TrackLog" />
+          <NavigationProperty Name="Groups" Relationship="Demo.UserGroup" FromRole="User" ToRole="Group" />
+          <NavigationProperty Name="UsersInGroups" Relationship="Demo.UserUsersInGroups" FromRole="User" ToRole="UsersInGroups" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Demo.RoleUser" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <Association Name="RoleUser">
+          <End Type="Demo.Role" Role="Role" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Demo.User" Role="User" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <NavigationProperty Name="Events" Relationship="Demo.GroupEvent" FromRole="Group" ToRole="Event" />
+          <NavigationProperty Name="Owner" Relationship="Demo.UserGroup" FromRole="Group" ToRole="User" />
+          <NavigationProperty Name="UsersInGroups" Relationship="Demo.GroupUsersInGroups" FromRole="Group" ToRole="UsersInGroups" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="Double" Name="BaseLat" Nullable="false" DefaultValue="0" />
+          <Property Type="Double" Name="BaseLon" Nullable="false" DefaultValue="0" />
+          <Property Type="Double" Name="BaseRadius" Nullable="false" DefaultValue="0" />
+          <NavigationProperty Name="Group" Relationship="Demo.GroupEvent" FromRole="Event" ToRole="Group" />
+          <NavigationProperty Name="TrackLogs" Relationship="Demo.EventTrackLog" FromRole="Event" ToRole="TrackLog" />
+        </EntityType>
+        <Association Name="GroupEvent">
+          <End Type="Demo.Group" Role="Group" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Demo.Event" Role="Event" Multiplicity="*" />
+        </Association>
+        <EntityType Name="TrackLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Double" Name="Lat" Nullable="false" DefaultValue="0" />
+          <Property Type="Double" Name="Lon" Nullable="false" DefaultValue="0" />
+          <Property Type="DateTime" Name="LogDateTime" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Demo.UserTrackLog" FromRole="TrackLog" ToRole="User" />
+          <NavigationProperty Name="Event" Relationship="Demo.EventTrackLog" FromRole="TrackLog" ToRole="Event" />
+        </EntityType>
+        <Association Name="UserTrackLog">
+          <End Type="Demo.User" Role="User" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Demo.TrackLog" Role="TrackLog" Multiplicity="*" />
+        </Association>
+        <Association Name="EventTrackLog">
+          <End Type="Demo.Event" Role="Event" Multiplicity="1" />
+          <End Type="Demo.TrackLog" Role="TrackLog" Multiplicity="*" />
+        </Association>
+        <EntityType Name="UsersInGroups">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Demo.UserUsersInGroups" FromRole="UsersInGroups" ToRole="User" />
+          <NavigationProperty Name="Group" Relationship="Demo.GroupUsersInGroups" FromRole="UsersInGroups" ToRole="Group" />
+        </EntityType>
+        <Association Name="UserGroup">
+          <End Type="Demo.User" Role="User" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Demo.Group" Role="Group" Multiplicity="*" />
+        </Association>
+        <Association Name="UserUsersInGroups">
+          <End Type="Demo.User" Role="User" Multiplicity="1" />
+          <End Type="Demo.UsersInGroups" Role="UsersInGroups" Multiplicity="*" />
+        </Association>
+        <Association Name="GroupUsersInGroups">
+          <End Type="Demo.Group" Role="Group" Multiplicity="1" />
+          <End Type="Demo.UsersInGroups" Role="UsersInGroups" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DemoStoreContainer" CdmEntityContainer="DemoContainer">
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="IsTypeOf(Demo.User)">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Roles">
+      <EntityTypeMapping TypeName="IsTypeOf(Demo.Role)">
+        <MappingFragment StoreEntitySet="Roles">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Groups">
+      <EntityTypeMapping TypeName="IsTypeOf(Demo.Group)">
+        <MappingFragment StoreEntitySet="Groups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Events">
+      <EntityTypeMapping TypeName="IsTypeOf(Demo.Event)">
+        <MappingFragment StoreEntitySet="Events">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="BaseLat" ColumnName="BaseLat" />
+          <ScalarProperty Name="BaseLon" ColumnName="BaseLon" />
+          <ScalarProperty Name="BaseRadius" ColumnName="BaseRadius" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TrackLogs">
+      <EntityTypeMapping TypeName="IsTypeOf(Demo.TrackLog)">
+        <MappingFragment StoreEntitySet="TrackLogs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Lat" ColumnName="Lat" />
+          <ScalarProperty Name="Lon" ColumnName="Lon" />
+          <ScalarProperty Name="LogDateTime" ColumnName="LogDateTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UsersInGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(Demo.UsersInGroups)">
+        <MappingFragment StoreEntitySet="UsersInGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="RoleUser" TypeName="Demo.RoleUser" StoreEntitySet="Users">
+      <EndProperty Name="Role">
+        <ScalarProperty Name="Id" ColumnName="Role_Id" />
+      </EndProperty>
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="GroupEvent" TypeName="Demo.GroupEvent" StoreEntitySet="Events">
+      <EndProperty Name="Group">
+        <ScalarProperty Name="Id" ColumnName="Group_Id" />
+      </EndProperty>
+      <EndProperty Name="Event">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UserTrackLog" TypeName="Demo.UserTrackLog" StoreEntitySet="TrackLogs">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="User_Id" />
+      </EndProperty>
+      <EndProperty Name="TrackLog">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="EventTrackLog" TypeName="Demo.EventTrackLog" StoreEntitySet="TrackLogs">
+      <EndProperty Name="Event">
+        <ScalarProperty Name="Id" ColumnName="Event_Id" />
+      </EndProperty>
+      <EndProperty Name="TrackLog">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UserGroup" TypeName="Demo.UserGroup" StoreEntitySet="Groups">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="Owner_Id" />
+      </EndProperty>
+      <EndProperty Name="Group">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UserUsersInGroups" TypeName="Demo.UserUsersInGroups" StoreEntitySet="UsersInGroups">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="User_Id" />
+      </EndProperty>
+      <EndProperty Name="UsersInGroups">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="GroupUsersInGroups" TypeName="Demo.GroupUsersInGroups" StoreEntitySet="UsersInGroups">
+      <EndProperty Name="Group">
+        <ScalarProperty Name="Id" ColumnName="Group_Id" />
+      </EndProperty>
+      <EndProperty Name="UsersInGroups">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="Model1" >
+        <EntityTypeShape EntityType="Demo.User" Width="1.5" PointX="0.5" PointY="0.625" Height="3.5186979166666656" />
+        <EntityTypeShape EntityType="Demo.Role" Width="1.5" PointX="2.875" PointY="0.5" Height="1.59568359375" />
+        <AssociationConnector Association="Demo.RoleUser">
+          <ConnectorPoint PointX="2.875" PointY="1.360341796875" />
+          <ConnectorPoint PointX="2" PointY="1.360341796875" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Demo.Group" Width="1.5" PointX="0.5" PointY="6.625" Height="2.1725878906249996" />
+        <EntityTypeShape EntityType="Demo.Event" Width="1.5" PointX="3.75" PointY="6.5" Height="2.5571907552083326" />
+        <AssociationConnector Association="Demo.GroupEvent">
+          <ConnectorPoint PointX="2" PointY="7.8386971614583327" />
+          <ConnectorPoint PointX="3.75" PointY="7.8386971614583327" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Demo.TrackLog" Width="1.5" PointX="6.625" PointY="2.375" Height="2.1725878906249996" />
+        <AssociationConnector Association="Demo.UserTrackLog">
+          <ConnectorPoint PointX="2" PointY="2.90625" />
+          <ConnectorPoint PointX="6.625" PointY="2.90625" />
+        </AssociationConnector>
+        <AssociationConnector Association="Demo.EventTrackLog">
+          <ConnectorPoint PointX="4.5" PointY="6.5" />
+          <ConnectorPoint PointX="4.5" PointY="3.7581714453125006" />
+          <ConnectorPoint PointX="6.625" PointY="3.7581714453125006" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Demo.UsersInGroups" Width="1.5" PointX="0.5" PointY="4.375" Height="1.5956835937499996" />
+        <AssociationConnector Association="Demo.UserGroup">
+          <ConnectorPoint PointX="2" PointY="3.9502416382211534" />
+          <ConnectorPoint PointX="2.375" PointY="4.3252416382211534" />
+          <ConnectorPoint PointX="2.375" PointY="6.2257692307692309" />
+          <ConnectorPoint PointX="1.9757692307692309" PointY="6.625" />
+        </AssociationConnector>
+        <AssociationConnector Association="Demo.UserUsersInGroups">
+          <ConnectorPoint PointX="1.25" PointY="3.951396484375" />
+          <ConnectorPoint PointX="1.25" PointY="4.375" />
+        </AssociationConnector>
+        <AssociationConnector Association="Demo.GroupUsersInGroups">
+          <ConnectorPoint PointX="1.2187475" PointY="6.625" />
+          <ConnectorPoint PointX="1.2187475" PointY="6.1629850260416656" />
+        </AssociationConnector>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

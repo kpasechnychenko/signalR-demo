@@ -1,0 +1,82 @@
+﻿@model Model.Model.ViewGroupWithUsers
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View @Model.Group.Name</h2>
+
+<fieldset>
+    <legend>@Model.Group.Name (@Model.Group.Description)</legend>
+    <h3>Participants(Click for details)</h3>
+    <ul class="users-container" data-groupid="@Model.Group.Id">
+        @foreach(var u in Model.Users){
+            <li data-userid="@u.Id">@u.FirstName @u.LastName</li>
+        }
+    </ul>
+
+    <h3>Details</h3>
+    <div class="user-details">
+    </div>
+
+    <h3>All participants coordinates</h3>
+    <ul class="user-coordinates">
+    </ul>
+
+</fieldset>
+<div>
+    @Html.ActionLink("Back to List", "Groups", "AdminPanel")
+</div>
+
+@section Footer{
+
+            <script language="javascript" type="text/javascript">
+                $(".users-container li").click(function () {
+                    var userId = $(this).attr("data-userid");
+                    var groupid = $(this).parent().attr("data-groupid"); ;
+                    $.get("/api/UserDetails/GetUserTrack?userid=" + userId + "&groupid=" + groupid, function (data) {
+                        if (data.length > 0) {
+                            var container = $(".user-details");
+                            container.empty();
+                            var name = $("<span>").html(data[0].FirstName + " " + data[0].LastName);
+                            container.append($("<div>").append(name));
+
+                            var coordinates = $("<ul>");
+
+                            $.each(data, function (i, el) {
+
+                                coordinates.append($("<li>").html("Lat:" + el.Lat + "; Lon:" + el.Lon + "; Date: " + new Date(parseInt(el.DateTime.substr(6)))));
+                            });
+
+                            container.append(coordinates);
+
+                        }
+                    })
+                });
+
+                var hubConnection = $.hubConnection('', { qs: "activationType=admin&groupId=@Model.Group.Id", logging: true, useDefaultPath: true });
+                hub = hubConnection.createHubProxy('coordinates');
+
+                hub.on("addMessage", function (data) {
+
+                    var container = $('.user-coordinates');
+
+                    var values = data.split("~");
+
+                    var holder = container.find("li[data-userId='" + values[0] + "']");
+
+                    if (holder.length == 0) {
+                        holder = $("<li>").html(values[1] + " " + values[2] + " " + "Lat:" + values[3] + "; Lon:" + values[4]);
+                        holder.attr("data-userId", values[0]);
+                        container.append(holder);
+                    }
+                    else {
+                        holder.empty();
+                        holder.html(values[1] + " " + values[2] + " " + "Lat:" + values[3] + "; Lon:" + values[4]);
+                    }
+                });
+
+                hubConnection.start();
+            </script>
+}

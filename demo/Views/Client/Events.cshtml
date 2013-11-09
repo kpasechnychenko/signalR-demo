@@ -1,0 +1,80 @@
+﻿@model List<Model.Model.ViewEvent>
+
+@{
+    ViewBag.Title = "Events";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<fieldset>
+        <legend>Events</legend>
+        <div>
+          @Html.ActionLink("Apply For Group", "ApplyGroup")
+        </div>
+        @foreach (var item in Model)
+        {
+            <div data-eventid="@item.Id">
+                <span>@item.Name</span>
+                <button class="start-tracking" >Start Tracking</button>
+            </div>
+        }
+</fieldset>
+
+<div>
+    @Html.ActionLink("Back", "Index", "Home")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+@section Footer{
+
+            <script language="javascript" type="text/javascript">
+
+                var hubConnection = $.hubConnection('', { qs: "activationType=user", logging: true, useDefaultPath: true });
+                hub = hubConnection.createHubProxy('coordinates');
+
+                hub.on("send", function () { return false; });
+
+                function setCoordinates(eventId) {
+                    var randomLat = -90 + 180*Math.random();
+                    var randomLon = -180 + 360 * Math.random();
+                    var message = eventId + "~" + randomLat + "~" + randomLon + "~";
+                    hub.invoke("send", message);
+                };
+
+
+                $(".start-tracking").on("click", function () {
+                    if ($(this).html() == "Start Tracking") {
+
+                        $(this).html("Stop Tracking");
+
+                        var elmnts = $(".start-tracking");
+                        $.each(elmnts, function (i, el) {
+                            if ($(el).html() == "Start Tracking") {
+                                $(el).attr("disabled", true);
+                            }
+                        });
+                        var eventId = $(this).parent().attr("data-eventid");
+                        hubConnection.logging = true;
+                        hub.logging = true;
+                        hubConnection.start({withCredentials:true, clientProtocol:1.2 }).done(function () {
+                            window.interval = setInterval(function () { setCoordinates(eventId); }, 20000);
+                        }).fail(function (e) { console.log(e); });
+                    }
+                    else {
+                        var elmnts = $(".start-tracking");
+                        $.each(elmnts, function (i, el) {
+                            if ($(el).html() == "Start Tracking") {
+                                $(el).removeAttr("disabled");
+                            }
+                        });
+                        $(this).html("Start Tracking");
+                        clearInterval(window.interval);
+                        hubConnection.stop();
+                    }
+
+                });
+
+            </script>
+}
