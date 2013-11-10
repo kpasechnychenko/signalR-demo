@@ -30,11 +30,14 @@ namespace demo.Controllers
 
         [Authorize]
         [ActionName("ApplyGroup"), HttpPost]
-        public ActionResult ApplyGroupSave()
+        public ActionResult ApplyGroupSave(List<ViewGroup> groups)
         {
-            foreach(var key in Request.Form.AllKeys)
+            foreach (var gr in groups)
             {
-                GroupModel.AddGroupForUser(User.Identity.Name, int.Parse(key));
+                if (gr.Selected)
+                {
+                    GroupModel.AddGroupForUser(User.Identity.Name, gr.Id);
+                }
             }
             return RedirectToAction("Events");
         }
